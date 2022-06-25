@@ -70,7 +70,29 @@ module.exports.processAddPage = (req, res, next) => {
 // Gets a car by id and renders the Edit form using the add_edit.ejs template
 module.exports.displayEditPage = (req, res, next) => {
 
-    // ADD YOUR CODE HERE
+    let id = req.params.id;
+
+    CarModel.findById(id, (err, existingCar) => {
+        if (err) {
+            console.log(err);
+            res.end(err);
+        } else {
+            //show the edit view
+            res.render('cars/add_edit', {
+                title: 'Edit this  Car',
+                car: {
+                    make: existingCar.make,
+                    model: existingCar.model,
+                    year: existingCar.year,
+                    kilometers: existingCar.kilometers,
+                    doors: existingCar.doors,
+                    seats: existingCar.seats,
+                    color: existingCar.color,
+                    price: existingCar.price,
+                }
+            });
+        }
+    });
 
 }
 
