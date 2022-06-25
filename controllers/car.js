@@ -62,8 +62,8 @@ module.exports.displayAddPage = (req, res, next) => {
 // Processes the data submitted from the Add form to create a new car
 module.exports.processAddPage = (req, res, next) => {
 
-
-
+    // ADD YOUR CODE HERE
+    console.log('smth', req.body);
 
     var car = new CarModel({
         make: req.body.make,
