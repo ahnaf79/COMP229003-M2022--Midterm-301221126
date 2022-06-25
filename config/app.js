@@ -9,32 +9,6 @@ let methodOverride = require('method-override');
 let session = require('express-session');
 let flash = require('connect-flash');
 let passport = require('passport');
-//let cors = require('cors');
-
-// let passportJWT = require('passport-jwt');
-// let JWTStrategy = passportJWT.Strategy;
-// let ExtractJWT = passportJWT.ExtractJwt;
-
-//serialize and deserialize the User info
-// passport.serializeUser(User.serializeUser());
-// passport.deserializeUser(User.deserializeUser());
-
-// verify that the token sent by the user - check if valid
-// let jwtOptions = {};
-// jwtOptions.jwtFromRequest = ExtractJWT.fromAuthHeaderAsBearerToken();
-// //jwtOptions.secretOrKey = DB.secret;
-// let strategy = new JWTStrategy(jwtOptions, (jwt_payload, done) => {
-//     User.findById(jwt_payload.id)
-//         .then(user => {
-//             return done(null, user);
-//         })
-//         .catch(err => {
-//             return done(err, false);
-//         });
-// });
-
-// let jwt = require('jsonwebtoken');
-// let DB = require('../db');
 
 //live reload
 var livereload = require("livereload");
