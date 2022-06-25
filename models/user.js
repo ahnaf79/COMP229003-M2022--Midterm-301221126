@@ -2,54 +2,51 @@ let mongoose = require('mongoose');
 let crypto = require('crypto');
 let Schema = mongoose.Schema;
 
-let UserSchema = mongoose.Schema(
-    {
-        firstName: String,
-        lastName: String,
-        email: {
-            type: String,
-            match: [/.+\@.+\..+/, "Please fill a valid e-mail address"]
-        },
-        username: {
-            type: String,
-            unique: true,
-            required: 'Username is required',
-            trim: true
-        },
-        password: {
-            type: String,
-            validate: [(password) => {
-                return password && password.length > 6;
-            }, 'Password should be longer']
-        },
-        salt: {
-            type: String
-        },
-        provider: {
-            type: String,
-            required: 'Provider is required'
-        },
-        providerId: String,
-        providerData: {},
-        created: {
-            type: Date,
-            default: Date.now
-        }
+let UserSchema = mongoose.Schema({
+    firstName: String,
+    lastName: String,
+    email: {
+        type: String,
+        match: [/.+\@.+\..+/, "Please fill a valid e-mail address"]
     },
-    {
-        collection: "user"
+    username: {
+        type: String,
+        unique: true,
+        required: 'Username is required',
+        trim: true
+    },
+    password: {
+        type: String,
+        validate: [(password) => {
+            return password && password.length > 6;
+        }, 'Password should be longer']
+    },
+    salt: {
+        type: String
+    },
+    provider: {
+        type: String,
+        required: 'Provider is required'
+    },
+    providerId: String,
+    providerData: {},
+    created: {
+        type: Date,
+        default: Date.now
     }
-);
+}, {
+    collection: "user"
+});
 
 UserSchema.virtual('fullName')
-.get(function() {
-    return this.firstName + ' ' + this.lastName;
-})
-.set(function(fullName) {
-    let splitName = fullName.split(' ');
-    this.firstName = splitName[0] || '';
-    this.lastName = splitName[1] || '';
-});
+    .get(function() {
+        return this.firstName + ' ' + this.lastName;
+    })
+    .set(function(fullName) {
+        let splitName = fullName.split(' ');
+        this.firstName = splitName[0] || '';
+        this.lastName = splitName[1] || '';
+    });
 
 UserSchema.pre('save', function(next) {
     if (this.password) {
@@ -57,6 +54,11 @@ UserSchema.pre('save', function(next) {
         this.password = this.hashPassword(this.password);
     }
     next();
+});
+
+UserSchema.post('save', function(next) {
+    console.log('Thanks! User "' + this.username + '"details have been saved.');
+
 });
 
 UserSchema.methods.hashPassword = function(password) {
@@ -90,5 +92,15 @@ UserSchema.set('toJSON', {
     getters: true,
     virtuals: true
 });
+
+// let userModel = mongoose.Schema({
+//     firstName: String,
+//     lastName: String,
+//     email: String,
+//     username: String,
+//     password: String,
+// }, {
+//     collection: "user"
+// })
 
 module.exports = mongoose.model('User', UserSchema);
