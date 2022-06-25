@@ -15,11 +15,6 @@ function requireAuth(req, res, next) {
     }
 }
 
-
-
-
-
-
 /* GET list of items */
 router.get('/list', carController.carList);
 
