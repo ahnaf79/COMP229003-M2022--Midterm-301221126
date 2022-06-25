@@ -11,6 +11,9 @@ function requireAuth(req, res, next) {
 
 }
 
+
+
+
 /* GET list of items */
 router.get('/list', carController.carList);
 
@@ -26,6 +29,7 @@ router.post('/edit/:id', carController.processEditPage);
 
 // Delete
 router.get('/delete/:id', carController.performDelete);
+
 
 /* GET Route for displaying the Add page - CREATE Operation */
 router.get('/add', carController.displayAddPage);

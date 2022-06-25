@@ -10,12 +10,28 @@ let session = require('express-session');
 let flash = require('connect-flash');
 let passport = require('passport');
 
+//live reload
+var livereload = require("livereload");
+var connectLiveReload = require("connect-livereload");
+
+
+
+const liveReloadServer = livereload.createServer();
+liveReloadServer.server.once("connection", () => {
+    setTimeout(() => {
+        liveReloadServer.refresh("/");
+    }, 100);
+});
+
+
 let app = express();
 
+app.use(connectLiveReload());
+
 app.use(session({
-  saveUninitialized: true,
-  resave: true,
-  secret: "sessionSecret"
+    saveUninitialized: true,
+    resave: true,
+    secret: "sessionSecret"
 }));
 
 
@@ -46,18 +62,18 @@ app.use('/cars', carsRouter);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
-  next(createError(404));
+    next(createError(404));
 });
 
 // error handler
 app.use(function(err, req, res, next) {
-  // set locals, only providing error in development
-  res.locals.message = err.message;
-  res.locals.error = req.app.get('env') === 'development' ? err : {};
+    // set locals, only providing error in development
+    res.locals.message = err.message;
+    res.locals.error = req.app.get('env') === 'development' ? err : {};
 
-  // render the error page
-  res.status(err.status || 500);
-  res.render('error');
+    // render the error page
+    res.status(err.status || 500);
+    res.render('error');
 });
 
 module.exports = app;
