@@ -44,6 +44,7 @@ module.exports.displayAddPage = (req, res, next) => {
 
     res.render('cars/add_edit', {
         title: 'Add a new Car',
+        action: '/cars/add',
         car: {
             make: '',
             model: '',
@@ -62,8 +63,27 @@ module.exports.displayAddPage = (req, res, next) => {
 module.exports.processAddPage = (req, res, next) => {
 
     // ADD YOUR CODE HERE
+    console.log('smth', req.body);
 
+    var car = new CarModel({
+        make: req.body.make,
+        model: req.body.model,
+        year: req.body.year,
+        kilometers: req.body.kilometers,
+        doors: req.body.doors,
+        seats: req.body.seats,
+        color: req.body.color,
+        price: req.body.price,
+    });
 
+    // Save the new model instance, passing a callback
+    car.save(function(err) {
+        console.log(err)
+        if (err) return handleError(err);
+        // saved!
+    });
+
+    res.redirect('/cars/list');
 
 }
 
@@ -79,7 +99,8 @@ module.exports.displayEditPage = (req, res, next) => {
         } else {
             //show the edit view
             res.render('cars/add_edit', {
-                title: 'Edit this  Car',
+                title: 'Edit this Car',
+                action: `/cars/edit/${id}`,
                 car: {
                     make: existingCar.make,
                     model: existingCar.model,
@@ -99,14 +120,66 @@ module.exports.displayEditPage = (req, res, next) => {
 // Processes the data submitted from the Edit form to update a car
 module.exports.processEditPage = (req, res, next) => {
 
-    // ADD YOUR CODE HERE
+    console.log('hello')
+
+    CarModel.findById(req.params.id, (err, existingCar) => {
+        if (err) {
+            console.log(err);
+            res.end(err);
+        } else {
+
+            existingCar.updateOne({
+                make: req.body.make,
+                model: req.body.model,
+                year: req.body.year,
+                kilometers: req.body.kilometers,
+                doors: req.body.doors,
+                seats: req.body.seats,
+                color: req.body.color,
+                price: req.body.price,
+            });
+
+            existingCar.save()
+
+        }
+    });
+
+    CarModel.findByIdAndUpdate(req.params.id, {
+            make: req.body.make,
+            model: req.body.model,
+            year: req.body.year,
+            kilometers: req.body.kilometers,
+            doors: req.body.doors,
+            seats: req.body.seats,
+            color: req.body.color,
+            price: req.body.price,
+        },
+        function(err) {
+            if (err) {
+                console.log(err)
+            }
+
+            console.log("Successful edit");
+        }
+    );
+
+    res.redirect('/cars/list');
 
 }
 
 // Deletes a car based on its id.
 module.exports.performDelete = (req, res, next) => {
+    console.log(req.params.id);
 
-    // ADD YOUR CODE HERE
+    CarModel.deleteOne({ id: req.params.id }, function(err) {
+        if (err) {
+            console.log(err)
+        }
+
+        console.log("Successful deletion");
+    });
+
+    res.redirect(req.get('referer'));
 
 }
 
